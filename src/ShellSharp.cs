@@ -6,8 +6,29 @@ class ShellSharp
         {
             Console.Write("$ ");
 
-            var command = Console.ReadLine();
-            Console.WriteLine($"{command}: command not found");
+            var input = Console.ReadLine();
+
+            if (input != null)
+            {
+                string[] inputArgs = input.Split(" ");
+
+                string command = inputArgs[0];
+                inputArgs = inputArgs[1..];
+
+                if (String.Equals(command, "exit", StringComparison.OrdinalIgnoreCase))
+                {
+                    int exitValue = 0;
+                    if (inputArgs.Length != 0 && int.TryParse(inputArgs[0], out int parsedValue))
+                    {
+                        exitValue = parsedValue;
+                    }
+                    Environment.Exit(exitValue);
+                }
+                else
+                {
+                    Console.WriteLine($"{command}: command not found");
+                }
+            }
         }
     }
 }
