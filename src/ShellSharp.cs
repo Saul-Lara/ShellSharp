@@ -24,6 +24,10 @@ class ShellSharp
                     }
                     Environment.Exit(exitValue);
                 }
+                else if (String.Equals(command, "echo", StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine($"{String.Join(" ", inputArgs)}");
+                }
                 else
                 {
                     Console.WriteLine($"{command}: command not found");
