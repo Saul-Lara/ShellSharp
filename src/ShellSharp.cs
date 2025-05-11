@@ -1,5 +1,7 @@
 class ShellSharp
 {
+    HashSet<string> builtinCommands = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "exit", "echo", "type" };
+
     public void Start()
     {
         while (true)
@@ -27,6 +29,26 @@ class ShellSharp
                 else if (String.Equals(command, "echo", StringComparison.OrdinalIgnoreCase))
                 {
                     Console.WriteLine($"{String.Join(" ", inputArgs)}");
+                }
+                else if (String.Equals(command, "type", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (inputArgs.Length == 0)
+                    {
+                        Console.WriteLine("type: missing operand");
+                    }
+                    else
+                    {
+                        string commandName = inputArgs[0];
+
+                        if (builtinCommands.Contains(commandName))
+                        {
+                            Console.WriteLine($"{commandName} is a shell builtin");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"{commandName}: not found");
+                        }
+                    }
                 }
                 else
                 {
