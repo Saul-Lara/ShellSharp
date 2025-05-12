@@ -32,19 +32,39 @@ class ShellSharp
                 }
                 else if (String.Equals(command, "type", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (inputArgs.Length == 0)
+                    if (inputArgs.Length == 0 || String.IsNullOrEmpty(inputArgs[0]))
                     {
                         Console.WriteLine("type: missing operand");
                     }
                     else
                     {
-                        string commandName = inputArgs[0];
+                        string commandName = inputArgs[0].Trim();
+                        bool isFound = false;
 
                         if (builtinCommands.Contains(commandName))
                         {
                             Console.WriteLine($"{commandName} is a shell builtin");
+                            isFound = true;
                         }
                         else
+                        {
+                            string? pathEnv = Environment.GetEnvironmentVariable("PATH");
+
+                            if (!String.IsNullOrEmpty(pathEnv))
+                            {
+                                foreach (string directory in pathEnv.Split(Path.PathSeparator))
+                                {
+                                    if (File.Exists(Path.Combine(directory, commandName)))
+                                    {
+                                        Console.WriteLine($"{commandName} is {Path.Combine(directory, commandName)}");
+                                        isFound = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!isFound)
                         {
                             Console.WriteLine($"{commandName}: not found");
                         }
